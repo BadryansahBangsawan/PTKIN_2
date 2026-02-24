@@ -48,7 +48,7 @@ export function LoginModal() {
             </Button>
           </div>
         </div>
-        <form onSubmit={handleLoginSubmit} className="p-6 space-y-5" noValidate>
+        <form onSubmit={handleLoginSubmit} className="p-6 space-y-5">
           <div className="space-y-2">
             <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
               <User className="h-4 w-4 text-primary" />
@@ -97,9 +97,8 @@ export function LoginModal() {
               Batal
             </Button>
             <Button
-              type="button"
+              type="submit"
               className="flex-1 h-12 rounded-xl bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white text-sm font-semibold shadow-lg shadow-primary/25 transition-all hover:shadow-xl"
-              onClick={handleLoginSubmit}
             >
               Login
             </Button>

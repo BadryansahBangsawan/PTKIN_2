@@ -7,7 +7,7 @@ import {
   Card,
 } from "@/components/ui/card";
 import { User, MapPin, Hash, Phone, Mail, Calendar, Users, Wallet, Accessibility, LogOut, GraduationCap, School, Beaker, Star, Compass, Pencil, MessageSquare, CreditCard, Bell, Building, Award } from "lucide-react";
-import { getFormPendaftaranData, setFormPendaftaranData } from "@/lib/form-pendaftaran-store";
+import { clearFormPendaftaranData, getFormPendaftaranData, setFormPendaftaranData } from "@/lib/form-pendaftaran-store";
 
 const initialFormData = {
   biodata: {
@@ -69,6 +69,8 @@ export default function FormSekolah() {
 
   const handleLogout = () => {
     if (typeof window !== "undefined" && window.confirm("Apakah Anda yakin ingin keluar?")) {
+      document.cookie = "umptkin_login=; path=/; max-age=0";
+      clearFormPendaftaranData();
       window.location.href = "/";
     }
   };
