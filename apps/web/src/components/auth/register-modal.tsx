@@ -253,7 +253,7 @@ export function RegisterModal() {
             <div className="relative z-10 flex h-full w-full items-center justify-center px-2 py-6">
               <img
                 ref={leftMascotRef}
-                src="/Maskot/lariL.png"
+                src="/Maskot/lariR.png"
                 alt=""
                 className="h-[400px] w-auto object-contain drop-shadow-[0_20px_32px_rgba(0,0,0,0.32)]"
                 draggable={false}
@@ -455,7 +455,7 @@ export function RegisterModal() {
             <div className="relative z-10 flex h-full w-full items-center justify-center px-2 py-6">
               <img
                 ref={rightMascotRef}
-                src="/Maskot/jempol.png"
+                src="/Maskot/lariL.png"
                 alt=""
                 className="h-[400px] w-auto object-contain drop-shadow-[0_20px_32px_rgba(0,0,0,0.32)]"
                 draggable={false}

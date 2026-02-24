@@ -254,6 +254,13 @@ export default function Header2() {
                       </div>
                       <Link
                         prefetch={false}
+                        href="/profil"
+                        className="hover:bg-muted flex items-center px-4 py-2.5 text-sm font-medium transition-colors"
+                      >
+                        Profil
+                      </Link>
+                      <Link
+                        prefetch={false}
                         href="/form-pendaftaran"
                         className="hover:bg-muted flex items-center px-4 py-2.5 text-sm font-medium transition-colors"
                       >
@@ -373,6 +380,14 @@ export default function Header2() {
                           </p>
                         </div>
                       </div>
+                      <Link
+                        prefetch={false}
+                        href="/profil"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="text-foreground hover:bg-muted block w-full rounded-lg py-3 text-center font-medium transition-colors duration-200"
+                      >
+                        Profil
+                      </Link>
                       <Link
                         prefetch={false}
                         href="/form-pendaftaran"
