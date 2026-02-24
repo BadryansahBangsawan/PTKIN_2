@@ -70,6 +70,9 @@ export default function FormSekolah() {
   const handleLogout = () => {
     if (typeof window !== "undefined" && window.confirm("Apakah Anda yakin ingin keluar?")) {
       document.cookie = "umptkin_login=; path=/; max-age=0";
+      document.cookie = "umptkin_user=; path=/; max-age=0";
+      document.cookie = "umptkin_name=; path=/; max-age=0";
+      window.dispatchEvent(new Event("umptkin-auth-changed"));
       clearFormPendaftaranData();
       window.location.href = "/";
     }

@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { LogIn, User, Lock, X } from "lucide-react";
 import { useModalContext } from "@/contexts/modal-context";
+import { loginWithPassword } from "@/lib/login-auth";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 export function LoginModal() {
   const router = useRouter();
@@ -13,23 +16,37 @@ export function LoginModal() {
     username: "",
     password: "",
   });
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleLoginSubmit = (e: React.FormEvent) => {
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login data:", loginData);
+    setErrorMessage("");
+    setIsSubmitting(true);
+
+    const result = await loginWithPassword(loginData);
+    if (!result.ok) {
+      setErrorMessage(result.message);
+      setIsSubmitting(false);
+      return;
+    }
+
+    console.log("Login success:", result.user.username);
     setShowLoginModal(false);
     setLoginData({ username: "", password: "" });
     if (typeof document !== "undefined") {
       document.cookie = "umptkin_login=1; path=/; max-age=86400";
+      document.cookie = `umptkin_user=${encodeURIComponent(result.user.username)}; path=/; max-age=86400`;
+      document.cookie = `umptkin_name=${encodeURIComponent(result.user.nama)}; path=/; max-age=86400`;
+      window.dispatchEvent(new Event("umptkin-auth-changed"));
     }
+    setIsSubmitting(false);
     router.push("/form-pendaftaran");
   };
 
-  if (!showLoginModal) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="w-full max-w-md rounded-2xl bg-white shadow-2xl animate-in fade-in zoom-in duration-300">
+    <Dialog open={showLoginModal} onOpenChange={setShowLoginModal}>
+      <DialogContent className="max-w-md rounded-2xl bg-white shadow-2xl">
         <div className="bg-gradient-to-r from-primary to-primary/80 px-6 py-5 rounded-t-2xl">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -49,6 +66,11 @@ export function LoginModal() {
           </div>
         </div>
         <form onSubmit={handleLoginSubmit} className="p-6 space-y-5">
+          {errorMessage ? (
+            <Alert variant="destructive">
+              <AlertDescription>{errorMessage}</AlertDescription>
+            </Alert>
+          ) : null}
           <div className="space-y-2">
             <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
               <User className="h-4 w-4 text-primary" />
@@ -98,9 +120,10 @@ export function LoginModal() {
             </Button>
             <Button
               type="submit"
+              disabled={isSubmitting}
               className="flex-1 h-12 rounded-xl bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white text-sm font-semibold shadow-lg shadow-primary/25 transition-all hover:shadow-xl"
             >
-              Login
+              {isSubmitting ? "Masuk..." : "Login"}
             </Button>
           </div>
           <div className="text-center pt-2">
@@ -109,7 +132,7 @@ export function LoginModal() {
             </a>
           </div>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

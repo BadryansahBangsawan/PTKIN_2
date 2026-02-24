@@ -12,15 +12,21 @@ import { UserPlus, LogIn, Pencil, Unlock } from "lucide-react";
 import { useModalContext } from "@/contexts/modal-context";
 import { RegisterModal } from "./auth/register-modal";
 import { LoginModal } from "./auth/login-modal";
+import { useGsapReveal } from "@/hooks/use-gsap-reveal";
+
+const authRevealItems = [
+  { selector: "[data-gsap='auth-card']", y: 26, stagger: 0.14, duration: 0.75 },
+] as const;
 
 export default function AuthBoxes() {
   const { setShowRegisterModal, setShowLoginModal } = useModalContext();
+  const sectionRef = useGsapReveal<HTMLElement>(authRevealItems as any);
 
   return (
     <>
-      <section id="auth-section" className="container mx-auto px-4 py-12">
+      <section id="auth-section" className="container mx-auto px-4 py-12" ref={sectionRef}>
         <div className="grid gap-6 md:grid-cols-2 lg:gap-8">
-          <Card id="register-card" className="border-0 bg-gradient-to-br from-primary/10 via-primary/5 to-background hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+          <Card id="register-card" data-gsap="auth-card" className="border-0 bg-gradient-to-br from-primary/10 via-primary/5 to-background hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 opacity-0 hover:opacity-100 transition-opacity duration-300" />
             <CardHeader className="text-center relative z-10">
               <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/70 shadow-lg shadow-primary/20">
@@ -60,7 +66,7 @@ export default function AuthBoxes() {
             </CardContent>
           </Card>
 
-          <Card id="login-card" className="border-0 bg-gradient-to-br from-primary/10 via-primary/5 to-background hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+          <Card id="login-card" data-gsap="auth-card" className="border-0 bg-gradient-to-br from-primary/10 via-primary/5 to-background hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 opacity-0 hover:opacity-100 transition-opacity duration-300" />
             <CardHeader className="text-center relative z-10">
               <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/70 shadow-lg shadow-primary/20">

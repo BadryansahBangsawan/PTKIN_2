@@ -1,6 +1,15 @@
+"use client";
+
 import { Phone, Mail, ExternalLink, MapPin, Facebook, Twitter, Instagram, Youtube } from "lucide-react";
+import { useGsapReveal } from "@/hooks/use-gsap-reveal";
+
+const footerRevealItems = [
+  { selector: "[data-gsap='footer-col']", y: 22, stagger: 0.08, duration: 0.65 },
+  { selector: "[data-gsap='footer-bottom']", y: 14, duration: 0.55, start: "top 95%" },
+] as const;
 
 export default function Footer() {
+  const footerRef = useGsapReveal<HTMLElement>(footerRevealItems as any);
   const quickLinks = [
     { href: "/", label: "Beranda" },
     { href: "#fitur", label: "Keunggulan" },
@@ -18,10 +27,11 @@ export default function Footer() {
     <footer
       id="kontak"
       className="bg-primary text-primary-foreground"
+      ref={footerRef}
     >
       <div className="container mx-auto px-4 py-16">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4 mb-12">
-          <div className="space-y-6">
+          <div className="space-y-6" data-gsap="footer-col">
             <div className="flex items-center gap-3">
               <div className="relative h-12 w-12">
                 <img
@@ -59,7 +69,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-6" data-gsap="footer-col">
             <h4 className="text-lg font-bold text-white">Tautan Cepat</h4>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
@@ -75,7 +85,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-6" data-gsap="footer-col">
             <h4 className="text-lg font-bold text-white">Sumber Daya</h4>
             <ul className="space-y-3">
               {resources.map((resource) => (
@@ -96,7 +106,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-6" data-gsap="footer-col">
             <h4 className="text-lg font-bold text-white">Kontak Kami</h4>
             <ul className="space-y-4">
               <li className="space-y-2">
@@ -133,7 +143,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/10 pt-8">
+        <div className="border-t border-white/10 pt-8" data-gsap="footer-bottom">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="text-center md:text-left">
               <p className="text-sm text-gray-300">
