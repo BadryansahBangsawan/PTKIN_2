@@ -28,6 +28,7 @@
     "dotenv": "^17.2.2",
     "framer-motion": "^12.25.0",
     "lucide-react": "^0.562.0",
+    "mailjet": "^0.0.1",
     "zod": "^4.1.13"
   },
   "devDependencies": {

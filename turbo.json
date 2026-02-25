@@ -5,7 +5,23 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": ["dist/**", ".next/**"]
+      "outputs": ["dist/**", ".next/**"],
+      "env": [
+        "DATABASE_URL",
+        "PTKIN_TOKEN_USERNAME",
+        "PTKIN_TOKEN_PASSWORD",
+        "PTKIN_TOKEN_URL",
+        "RESEND_API_KEY",
+        "MAILJET_API_KEY",
+        "MAILJET_API_SECRET",
+        "MAILJET_SECRET_KEY",
+        "MAILJET_FROM",
+        "MAILJET_FROM_EMAIL",
+        "MAILJET_FROM_NAME",
+        "MAILJET_SUBJECT",
+        "MJ_APIKEY_PUBLIC",
+        "MJ_APIKEY_PRIVATE"
+      ]
     },
     "lint": {
       "dependsOn": ["^lint"]

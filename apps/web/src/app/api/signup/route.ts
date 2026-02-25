@@ -4,7 +4,7 @@ import { z } from "zod";
 import { db, users } from "@uin-samata/db";
 import { NextResponse } from "next/server";
 import { validatePtkinSiswa } from "@/server/ptkin-siswa";
-import { sendCredentialsEmailViaResend } from "@/server/email-resend";
+import { sendCredentialsEmailViaMailjet } from "@/server/email-mailjet";
 
 export const runtime = "nodejs";
 
@@ -102,7 +102,7 @@ export async function POST(request: Request) {
     const user = inserted[0];
 
     try {
-      await sendCredentialsEmailViaResend({
+      await sendCredentialsEmailViaMailjet({
         to: email,
         nama,
         username,
