@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
 } from "@/components/ui/card";
-import { User, MapPin, Hash, Phone, Mail, Calendar, Users, Wallet, Accessibility, LogOut, GraduationCap, School, Beaker, Star, Compass, Pencil, MessageSquare, CreditCard, Bell, Building, Award } from "lucide-react";
+import { User, MapPin, Hash, Phone, Mail, Calendar, Users, Wallet, Accessibility, LogOut, GraduationCap, School, Beaker, Star, Compass, Pencil, MessageSquare, CreditCard, Bell, Building, Award, Loader2 } from "lucide-react";
 import { clearFormPendaftaranData, getFormPendaftaranData, setFormPendaftaranData } from "@/lib/form-pendaftaran-store";
+import { savePendaftaranData, fetchPendaftaranData } from "@/lib/pendaftaran-api";
 
 const initialFormData = {
   biodata: {
@@ -50,6 +51,8 @@ const initialFormData = {
 
 export default function FormSekolah() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
 
   useEffect(() => {
     if (typeof document === "undefined") {
@@ -67,6 +70,43 @@ export default function FormSekolah() {
     }
   }, [router]);
 
+  // Fetch data from server on mount (only run once)
+  useEffect(() => {
+    const loadData = async () => {
+      setIsFetching(true);
+      const result = await fetchPendaftaranData();
+      
+      if (result.ok && (result.biodata || result.pendidikan)) {
+        // Convert null values to empty strings to avoid React warnings
+        const normalizeData = (data: any) => {
+          if (!data) return null;
+          const normalized: any = {};
+          Object.keys(data).forEach(key => {
+            normalized[key] = data[key] === null ? "" : data[key];
+          });
+          return normalized;
+        };
+
+        setFormData(prev => ({
+          biodata: { ...prev.biodata, ...normalizeData(result.biodata) },
+          pendidikan: { ...prev.pendidikan, ...normalizeData(result.pendidikan) },
+        }));
+      } else {
+        // Fallback to local storage
+        const stored = getFormPendaftaranData();
+        if (stored) {
+          setFormData(prev => ({
+            biodata: { ...prev.biodata, ...stored.biodata },
+            pendidikan: { ...prev.pendidikan, ...stored.pendidikan },
+          }));
+        }
+      }
+      setIsFetching(false);
+    };
+    
+    loadData();
+  }, []); // Empty dependency array = only run once on mount
+
   const handleLogout = () => {
     if (typeof window !== "undefined" && window.confirm("Apakah Anda yakin ingin keluar?")) {
       document.cookie = "umptkin_login=; path=/; max-age=0";
@@ -78,25 +118,37 @@ export default function FormSekolah() {
     }
   };
 
-  const [formData, setFormData] = useState(() => {
-    const stored = getFormPendaftaranData();
-    if (!stored) {
-      return initialFormData;
-    }
-    return {
-      biodata: { ...initialFormData.biodata, ...stored.biodata },
-      pendidikan: { ...initialFormData.pendidikan, ...stored.pendidikan },
-    };
-  });
+  const [formData, setFormData] = useState(initialFormData);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Data form:", formData);
-    if (typeof window !== "undefined") {
-      window.alert("Data berhasil disimpan!");
+    setIsLoading(true);
+    
+    try {
+      // Save to local storage as backup
+      setFormPendaftaranData(formData);
+      
+      // Save to server
+      const result = await savePendaftaranData(formData);
+      
+      if (result.ok) {
+        if (typeof window !== "undefined") {
+          window.alert("Data berhasil disimpan!");
+        }
+        router.push("/form-klarifikasi-registrasi");
+      } else {
+        if (typeof window !== "undefined") {
+          window.alert(result.message || "Gagal menyimpan data. Silakan coba lagi.");
+        }
+      }
+    } catch (error) {
+      console.error("Submit error:", error);
+      if (typeof window !== "undefined") {
+        window.alert("Terjadi kesalahan. Silakan coba lagi.");
+      }
+    } finally {
+      setIsLoading(false);
     }
-    setFormPendaftaranData(formData);
-    router.push("/form-klarifikasi-registrasi");
   };
 
   return (
@@ -616,14 +668,23 @@ export default function FormSekolah() {
                 type="button"
                 variant="outline"
                 className="flex-1 h-12 rounded-xl border-2 text-sm font-semibold hover:bg-gray-50 transition-colors"
+                disabled={isLoading || isFetching}
               >
                 Simpan Draft
               </Button>
               <Button
                 type="submit"
                 className="flex-1 h-12 rounded-xl bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white text-sm font-semibold shadow-lg shadow-primary/25 transition-all hover:shadow-xl"
+                disabled={isLoading || isFetching}
               >
-                Simpan & Lanjut
+                {isLoading ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Menyimpan...
+                  </span>
+                ) : (
+                  "Simpan & Lanjut"
+                )}
               </Button>
             </div>
           </form>

@@ -36,7 +36,7 @@ export function LoginModal() {
     setLoginData({ username: "", password: "" });
     if (typeof document !== "undefined") {
       document.cookie = "umptkin_login=1; path=/; max-age=86400";
-      document.cookie = `umptkin_user=${encodeURIComponent(result.user.username)}; path=/; max-age=86400`;
+      document.cookie = `umptkin_user=${encodeURIComponent(result.user.id)}; path=/; max-age=86400`;
       document.cookie = `umptkin_name=${encodeURIComponent(result.user.nama)}; path=/; max-age=86400`;
       window.dispatchEvent(new Event("umptkin-auth-changed"));
     }
